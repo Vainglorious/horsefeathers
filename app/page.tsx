@@ -1,65 +1,110 @@
-import Image from "next/image";
+import { band, photos } from "@/lib/content";
+import { getUpcomingShows } from "@/lib/shows";
+import NextShowBanner from "@/components/NextShowBanner";
+import Shows from "@/components/Shows";
 
-export default function Home() {
+// Always read fresh from the database — a date added in /admin should show up
+// on the homepage immediately, not after the next deploy.
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const shows = await getUpcomingShows();
+  const nextShow = shows[0] ?? null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <>
+      <NextShowBanner show={nextShow} />
+
+      <main className="flex-1">
+        {/* ---------- Hero ---------- */}
+        <section
+          className="relative flex min-h-[100svh] flex-col items-center justify-between bg-ink px-5 py-16 text-center"
+          style={
+            photos.hero
+              ? {
+                  backgroundImage: `url(${photos.hero})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
+              : undefined
+          }
+        >
+          {/* Stand-in until real photography lands: a soft light pool that
+              mimics the blown-out sky in the existing hero shot. */}
+          {!photos.hero && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_50%_18%,#4a4a4a,transparent_75%)]"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          )}
+
+          <h1 className="relative font-display text-[clamp(2.25rem,8.5vw,5.5rem)] text-rust tracked-wide">
+            {band.name}
+          </h1>
+
+          <p className="relative max-w-2xl font-body text-[clamp(1.125rem,3vw,1.75rem)] text-paper tracked">
+            {band.albumLine}
+          </p>
+
+          {/* Spacer keeps the album line optically centred between the name and
+              the bottom edge, matching the live site's proportions. */}
+          <div aria-hidden="true" />
+        </section>
+
+        {/* ---------- Shows (new — hidden until dates exist) ---------- */}
+        <Shows shows={shows} />
+
+        {/* ---------- About ---------- */}
+        <section
+          id="about"
+          className="relative flex min-h-[70svh] items-center justify-center bg-ink-soft px-5 py-24"
+          style={
+            photos.about
+              ? {
+                  backgroundImage: `url(${photos.about})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
+              : undefined
+          }
+        >
+          <p className="relative mx-auto max-w-2xl bg-ink/75 p-8 text-center font-body text-lg leading-relaxed text-paper tracked sm:text-xl sm:leading-relaxed">
+            {band.about}
+          </p>
+        </section>
+
+        {/* ---------- Contact ---------- */}
+        <section id="contact" className="bg-ink px-5 py-24 text-center sm:py-32">
+          <h2 className="font-display text-3xl text-rust tracked-wide sm:text-4xl">
+            Contact
+          </h2>
+          <p className="mt-8 font-display text-xl text-paper tracked sm:text-2xl">
+            {band.name}
+          </p>
+          <p className="mx-auto mt-6 max-w-xl font-body text-lg leading-relaxed text-paper-dim tracked">
+            For bookings and all other inquiries contact us at{" "}
+            <a
+              href={`mailto:${band.email}`}
+              className="text-rust underline underline-offset-4 transition-colors hover:text-rust-bright"
+            >
+              {band.email}
+            </a>{" "}
+            or at{" "}
+            <a
+              href={`tel:${band.phoneHref}`}
+              className="text-rust underline underline-offset-4 transition-colors hover:text-rust-bright"
+            >
+              {band.phone}
+            </a>
+          </p>
+        </section>
       </main>
-    </div>
+
+      <footer className="border-t border-ink-line bg-ink px-5 py-8 text-center">
+        <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-paper-dim">
+          © {new Date().getFullYear()} {band.name}
+        </p>
+      </footer>
+    </>
   );
 }
