@@ -37,5 +37,8 @@ export async function ensureSchema() {
       created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
+  // Added after the first deploy — kept as a separate idempotent statement so
+  // existing tables pick it up without a manual migration.
+  await sql`ALTER TABLE shows ADD COLUMN IF NOT EXISTS map_url TEXT`;
   return true;
 }

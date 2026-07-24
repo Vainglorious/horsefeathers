@@ -12,6 +12,7 @@ function readShowForm(formData: FormData) {
   const venue = String(formData.get("venue") ?? "").trim();
   const city = String(formData.get("city") ?? "").trim();
   const rawUrl = String(formData.get("ticketUrl") ?? "").trim();
+  const rawMap = String(formData.get("mapUrl") ?? "").trim();
   const soldOut = formData.get("soldOut") === "on";
 
   if (!date) return { error: "Pick a date." as const };
@@ -31,7 +32,17 @@ function readShowForm(formData: FormData) {
     }
   }
 
-  return { value: { date, venue, city, ticketUrl, soldOut } };
+  let mapUrl: string | null = null;
+  if (rawMap) {
+    mapUrl = /^https?:\/\//i.test(rawMap) ? rawMap : `https://${rawMap}`;
+    try {
+      new URL(mapUrl);
+    } catch {
+      return { error: "That map link doesn't look like a valid URL." as const };
+    }
+  }
+
+  return { value: { date, venue, city, ticketUrl, mapUrl, soldOut } };
 }
 
 export async function loginAction(

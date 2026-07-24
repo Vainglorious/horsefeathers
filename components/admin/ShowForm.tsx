@@ -77,6 +77,20 @@ export default function ShowForm() {
         />
       </div>
 
+      <div>
+        <label className={label} htmlFor="mapUrl">
+          Map link <span className="normal-case tracking-normal">(optional)</span>
+        </label>
+        <input
+          id="mapUrl"
+          name="mapUrl"
+          type="text"
+          inputMode="url"
+          placeholder="Google Maps link — makes the venue name clickable"
+          className={field}
+        />
+      </div>
+
       <label className="flex items-center gap-3 pt-1">
         <input
           name="soldOut"

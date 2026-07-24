@@ -5,7 +5,8 @@ export type Show = {
   date: string; // "YYYY-MM-DD"
   venue: string;
   city: string;
-  ticketUrl: string | null;
+  ticketUrl: string | null; // null renders as "At the door"
+  mapUrl: string | null; // links the venue name to Google Maps
   soldOut: boolean;
 };
 
@@ -15,6 +16,7 @@ type ShowRow = {
   venue: string;
   city: string;
   ticket_url: string | null;
+  map_url: string | null;
   sold_out: boolean;
 };
 
@@ -29,6 +31,7 @@ function toShow(r: ShowRow): Show {
     venue: r.venue,
     city: r.city,
     ticketUrl: r.ticket_url,
+    mapUrl: r.map_url,
     soldOut: r.sold_out,
   };
 }
@@ -51,7 +54,7 @@ export async function getUpcomingShows(): Promise<Show[]> {
   try {
     await ensureSchema();
     const rows = (await sql`
-      SELECT id, date, venue, city, ticket_url, sold_out
+      SELECT id, date, venue, city, ticket_url, map_url, sold_out
       FROM shows
       WHERE date >= ${todayISO()}
       ORDER BY date ASC
@@ -70,7 +73,7 @@ export async function getAllShows(): Promise<Show[]> {
   if (!sql) return [];
   await ensureSchema();
   const rows = (await sql`
-    SELECT id, date, venue, city, ticket_url, sold_out
+    SELECT id, date, venue, city, ticket_url, map_url, sold_out
     FROM shows
     ORDER BY date DESC
   `) as ShowRow[];
@@ -82,14 +85,15 @@ export async function createShow(input: {
   venue: string;
   city: string;
   ticketUrl: string | null;
+  mapUrl: string | null;
   soldOut: boolean;
 }) {
   const sql = getSql();
   if (!sql) throw new Error("No database configured");
   await ensureSchema();
   await sql`
-    INSERT INTO shows (date, venue, city, ticket_url, sold_out)
-    VALUES (${input.date}, ${input.venue}, ${input.city}, ${input.ticketUrl}, ${input.soldOut})
+    INSERT INTO shows (date, venue, city, ticket_url, map_url, sold_out)
+    VALUES (${input.date}, ${input.venue}, ${input.city}, ${input.ticketUrl}, ${input.mapUrl}, ${input.soldOut})
   `;
 }
 
@@ -100,6 +104,7 @@ export async function updateShow(
     venue: string;
     city: string;
     ticketUrl: string | null;
+    mapUrl: string | null;
     soldOut: boolean;
   },
 ) {
@@ -112,6 +117,7 @@ export async function updateShow(
         venue = ${input.venue},
         city = ${input.city},
         ticket_url = ${input.ticketUrl},
+        map_url = ${input.mapUrl},
         sold_out = ${input.soldOut}
     WHERE id = ${id}
   `;

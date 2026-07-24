@@ -27,7 +27,19 @@ export default function Shows({ shows }: { shows: Show[] }) {
                   {formatShowDateLong(show.date)}
                 </p>
                 <p className="mt-1 font-body text-base text-paper-dim tracked">
-                  {show.venue} · {show.city}
+                  {show.mapUrl ? (
+                    <a
+                      href={show.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline decoration-paper-dim/40 underline-offset-4 transition-colors hover:text-rust-bright"
+                    >
+                      {show.venue}
+                    </a>
+                  ) : (
+                    show.venue
+                  )}{" "}
+                  · {show.city}
                 </p>
               </div>
 
