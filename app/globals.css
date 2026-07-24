@@ -1,43 +1,35 @@
 @import "tailwindcss";
 
 /**
- * The Horsefeathers — dark by default. A band site is a poster on a wall at
- * night, not a SaaS dashboard, so there's no light mode here on purpose.
+ * Matched to the existing thehorsefeathers.com: black-and-white photography,
+ * band name in a large letterspaced orange serif, white serif body copy,
+ * everything centered.
  */
 @theme {
-  /* Warm near-black — brown-tinted rather than blue, to sit with the amber. */
-  --color-ink: #0c0a09;
-  --color-ink-soft: #16120f;
-  --color-ink-line: #2a221c;
+  --color-ink: #000000;
+  --color-ink-soft: #0d0d0d;
+  --color-ink-line: #262626;
 
-  /* Paper — warm off-white, never pure #fff. */
-  --color-paper: #f5efe6;
-  --color-paper-dim: #a89e92;
+  --color-paper: #f2f2f2;
+  --color-paper-dim: #a3a3a3;
 
-  /* Ember — the single accent. Used sparingly: CTAs and highlights only. */
-  --color-ember: #d97742;
-  --color-ember-bright: #f08d55;
+  /* Sampled from the band name on the live site. */
+  --color-rust: #c4703a;
+  --color-rust-bright: #d98850;
 
-  --font-display: var(--font-oswald), "Impact", sans-serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-cormorant), Georgia, serif;
+  --font-ui: var(--font-inter), system-ui, sans-serif;
 }
 
 body {
   background: var(--color-ink);
   color: var(--color-paper);
   font-family: var(--font-body);
-  /* Subtle vignette so the page has depth without needing a hero image. */
-  background-image: radial-gradient(
-    ellipse 80% 50% at 50% 0%,
-    rgba(217, 119, 66, 0.09),
-    transparent 70%
-  );
-  background-repeat: no-repeat;
 }
 
-/* Anchor links land below the sticky header instead of underneath it. */
 :target {
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 4rem;
 }
 
 html {
@@ -50,8 +42,16 @@ html {
   }
 }
 
-/* Keyboard focus stays visible everywhere — the ember ring reads on dark. */
 :focus-visible {
-  outline: 2px solid var(--color-ember-bright);
+  outline: 2px solid var(--color-rust-bright);
   outline-offset: 3px;
+}
+
+/* The site's signature: wide letterspacing on centered serif display text. */
+@utility tracked {
+  letter-spacing: 0.08em;
+}
+
+@utility tracked-wide {
+  letter-spacing: 0.16em;
 }

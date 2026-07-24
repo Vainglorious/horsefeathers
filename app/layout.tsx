@@ -1,24 +1,32 @@
 import type { Metadata } from "next";
-import { Inter, Oswald } from "next/font/google";
+import { Cormorant_Garamond, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { band, site } from "@/lib/content";
 
+// Display serif for the band name — closest match to the live site.
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+});
+
+// Body serif for the album line and about copy.
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
+
+// Sans reserved for UI chrome only — the admin panel and form controls.
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-// Condensed and tall — reads like a gig poster.
-const oswald = Oswald({
-  variable: "--font-oswald",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${band.name} — ${band.tagline}`,
+    default: band.name,
     template: `%s | ${band.name}`,
   },
   description: site.description,
@@ -44,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${oswald.variable} h-full antialiased`}
+      className={`${playfair.variable} ${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
