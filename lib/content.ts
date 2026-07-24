@@ -26,8 +26,8 @@ export const band = {
  * compressed and we shouldn't hotlink them).
  */
 export const photos = {
-  hero: null as string | null, // e.g. "/hero.jpg" — the portrait
-  about: null as string | null, // e.g. "/about.jpg" — the boots-on-gravel shot
+  hero: "/hero.avif" as string | null,
+  about: null as string | null, // TODO: the boots-on-gravel shot
 } as const;
 
 export const site = {
