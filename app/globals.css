@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/**
+ * The Horsefeathers — dark by default. A band site is a poster on a wall at
+ * night, not a SaaS dashboard, so there's no light mode here on purpose.
+ */
+@theme {
+  /* Warm near-black — brown-tinted rather than blue, to sit with the amber. */
+  --color-ink: #0c0a09;
+  --color-ink-soft: #16120f;
+  --color-ink-line: #2a221c;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Paper — warm off-white, never pure #fff. */
+  --color-paper: #f5efe6;
+  --color-paper-dim: #a89e92;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Ember — the single accent. Used sparingly: CTAs and highlights only. */
+  --color-ember: #d97742;
+  --color-ember-bright: #f08d55;
+
+  --font-display: var(--font-oswald), "Impact", sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  /* Subtle vignette so the page has depth without needing a hero image. */
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    rgba(217, 119, 66, 0.09),
+    transparent 70%
+  );
+  background-repeat: no-repeat;
+}
+
+/* Anchor links land below the sticky header instead of underneath it. */
+:target {
+  scroll-margin-top: 5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Keyboard focus stays visible everywhere — the ember ring reads on dark. */
+:focus-visible {
+  outline: 2px solid var(--color-ember-bright);
+  outline-offset: 3px;
 }
